@@ -2,7 +2,7 @@
 -- How many taxi trips were there on January 15?
 SELECT
   CAST(tpep_pickup_datetime),
-  COUNT(*)  
+  COUNT(index)  
 FROM
   yellow_taxi_trips
 WHERE
@@ -13,12 +13,12 @@ GROUP BY
 -- Question 4
 -- On which day it was the largest tip in January?
 SELECT 
-    tpep_pickup_datetime,
-    MAX(Tip_amount) AS 'tip'
+    CAST(tpep_pickup_datetime),
+    MAX(Tip_amount) AS 'largest_tip'
 FROM
 	yellow_taxi_trips
-GROUP BY (1)
-ORDER BY 'tip' DESC;
+GROUP BY CAST(tpep_pickup_datetime)
+ORDER BY 'largest_tip' DESC;
 
 -- Question 5
 -- What was the most popular destination for passengers picked up in central park on January 14?
@@ -43,7 +43,7 @@ ORDER BY
 -- Question 6
 -- What's the pickup-dropoff pair with the largest average price for a ride (calculated based on total_amount)?
 SELECT
-	AVG(total_amount) AS 'price',
+	AVG(total_amount) AS 'avg_total_amount',
 	CONCAT(zpu.'Zone', ' / ', zdo.'Zone') AS 'pickup_dropoff'
 
 FROM
@@ -54,6 +54,7 @@ FROM
 WHERE
 	t.'PULocationID' = zpu.'LocationID' AND
 	t.'DOLocationID' = zdo.'LocationID'
-GROUP BY (2)
+GROUP BY 
+    zpu.'Zone', zdo.'Zone'
 ORDER BY
-  'price' DESC;
+  'avg_total_amount' DESC;
